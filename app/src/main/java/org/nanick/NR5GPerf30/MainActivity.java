@@ -82,6 +82,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 import java.util.Random;
 import org.apache.commons.io.IOUtils;
+import org.nanick.NR5GPerf30.MainActivity.AllTextViews;
 
 public class MainActivity extends AppCompatActivity {
     public Integer csvRowNumber = 0;
@@ -169,6 +170,11 @@ public class MainActivity extends AppCompatActivity {
         this.locationManager.removeUpdates(this.locationListener);
         this.executorService.shutdown();
 
+    }
+    public void updateLteTA(int timingAdvance){
+        if(timingAdvance != 0 & timingAdvance != Integer.MAX_VALUE){
+            this.cio.TimingAdvance = timingAdvance;
+        }
     }
     public void updateLteRsrp(int rsrp){
         if(rsrp != 0){
@@ -798,6 +804,10 @@ public class MainActivity extends AppCompatActivity {
                     CellSignalStrengthLte pLte = (CellSignalStrengthLte)p;
                     int rsrp = pLte.getRsrp();
                     updateLteRsrp(rsrp);
+                    int ta = pLte.getTimingAdvance();
+                    if(ta != Integer.MAX_VALUE){
+                        updateLteTA(ta);
+                    }
                 }
                 if(p instanceof CellSignalStrengthNr){
                     CellSignalStrengthNr pNr = (CellSignalStrengthNr)p;
