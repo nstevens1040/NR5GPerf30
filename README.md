@@ -1,5 +1,5 @@
 # &#9888; Caution &#9888;
-This app tests your download and upload speed **indefinitely**. That means that it literally starts a bidirectional data transfer that **DOES NOT STOP** until you close the app.  
+This app tests your download and upload speed **indefinitely**. That means that it starts a bidirectional data transfer that **DOES NOT STOP** until you close the app.  
   
 Testing starts with five downloads that are 2621440 bytes each. Download speeds are calculated into Megabits per second and then averaged. The average download speed is displayed in a TextView.  
   
