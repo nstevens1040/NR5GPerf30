@@ -1,5 +1,6 @@
 <h1><img src="https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg"/>&nbsp;Caution&nbsp;<img src="https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg"/></h1>  
   
+<h1>![](https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg)&nbsp;Caution&nbsp;![](https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg)  
 This app tests your download and upload speed **indefinitely** and **DOES NOT STOP** until you close the app.  
   
 Testing starts with five downloads that are 2621440 bytes each. Download speeds are calculated into Megabits per second and then averaged. The average download speed is displayed in a TextView.  
