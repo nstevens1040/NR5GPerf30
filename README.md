@@ -1,5 +1,3 @@
-<h1><img src="https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg"/>&nbsp;Caution&nbsp;<img src="https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg"/></h1>  
-  
 ## &nbsp; ![](https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg) &nbsp; Caution &nbsp; ![](https://raw.githubusercontent.com/nstevens1040/NR5GPerf30/master/.ignore/nir.svg)  
   
 This app tests your download and upload speed **indefinitely** and **DOES NOT STOP** until you close the app.  
