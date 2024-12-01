@@ -34,7 +34,7 @@ import android.telephony.CellSignalStrengthLte;
 import android.telephony.CellSignalStrengthNr;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
-import android.telephony.TelephonyCallback;
+//import android.telephony.TelephonyCallback;
 import android.telephony.TelephonyDisplayInfo;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
@@ -60,8 +60,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
 import java.net.URL;
 
+//import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -74,15 +76,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.google.android.gms.location.Priority;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.StringJoiner;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
+//import java.util.stream.IntStream;
 import java.util.Random;
 import org.apache.commons.io.IOUtils;
-import org.nanick.NR5GPerf30.MainActivity.AllTextViews;
+//import org.nanick.NR5GPerf30.MainActivity.AllTextViews;
 
 public class MainActivity extends AppCompatActivity {
     public Integer csvRowNumber = 0;
@@ -94,8 +97,8 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener locationListener;
     private DiCb telephonyCallback;
     public File csv;
-    public File upload_file;
-    public FileWriter upload_writer;
+    //public File upload_file;
+    //public FileWriter upload_writer;
     public FileWriter csv_writer;
     public LteBands[] bands;
     public Nr5GBands[] nr5gbands;
@@ -198,31 +201,32 @@ public class MainActivity extends AppCompatActivity {
     public void writeCsvRow(CellInfoObj cio){
         cio.TimeStamp = System.currentTimeMillis();
         StringBuilder csvstring = new StringBuilder();
-        csvstring.append(cio.Rsrp+",");
-        csvstring.append(cio.SsRsrp+",");
-        csvstring.append(new DecimalFormat("0.00").format(cio.Speed) + ",");
-        csvstring.append(new DecimalFormat("0.00").format(cio.Upload) + ",");
-        csvstring.append(cio.TimingAdvance+",");
-        csvstring.append(cio.Plmn+",");
-        csvstring.append(cio.Tac+",");
-        csvstring.append(cio.CellId+",");
-        csvstring.append(cio.eNodeB+",");
-        csvstring.append(cio.Rat+",");
-        csvstring.append(cio.Lat+",");
-        csvstring.append(cio.Lng+",");
-        csvstring.append(cio.EARFCN+",");
-        csvstring.append(cio.Band+",");
-        csvstring.append(cio.Spectrum+",");
-        csvstring.append(cio.NRSpectrum+",");
-        csvstring.append(cio.Bandwidth+",");
-        csvstring.append(cio.Pci+",");
-        csvstring.append(cio.Rsrq+",");
-        csvstring.append(cio.IPAddress+",");
-        csvstring.append(cio.NRPci+",");
-        csvstring.append(cio.NRTac+",");
-        csvstring.append(cio.NRARFCN+",");
-        csvstring.append(cio.NR5GBandName+",");
-        csvstring.append(cio.TimeStamp+"\n");
+        csvstring.append(cio.Rsrp).append(",");
+        csvstring.append(cio.SsRsrp).append(",");
+        csvstring.append(new DecimalFormat("0.00").format(cio.Speed)).append(",");
+        csvstring.append(new DecimalFormat("0.00").format(cio.Upload)).append(",");
+        csvstring.append(cio.Latency).append(",");
+        csvstring.append(cio.TimingAdvance).append(",");
+        csvstring.append(cio.Plmn).append(",");
+        csvstring.append(cio.Tac).append(",");
+        csvstring.append(cio.CellId).append(",");
+        csvstring.append(cio.eNodeB).append(",");
+        csvstring.append(cio.Rat).append(",");
+        csvstring.append(cio.Lat).append(",");
+        csvstring.append(cio.Lng).append(",");
+        csvstring.append(cio.EARFCN).append(",");
+        csvstring.append(cio.Band).append(",");
+        csvstring.append(cio.Spectrum).append(",");
+        csvstring.append(cio.NRSpectrum).append(",");
+        csvstring.append(cio.Bandwidth).append(",");
+        csvstring.append(cio.Pci).append(",");
+        csvstring.append(cio.Rsrq).append(",");
+        csvstring.append(cio.IPAddress).append(",");
+        csvstring.append(cio.NRPci).append(",");
+        csvstring.append(cio.NRTac).append(",");
+        csvstring.append(cio.NRARFCN).append(",");
+        csvstring.append(cio.NR5GBandName).append(",");
+        csvstring.append(cio.TimeStamp).append("\n");
         String csv_string = csvstring.toString();
         Log.i("nr5gperf",csv_string);
         try {
@@ -234,6 +238,12 @@ public class MainActivity extends AppCompatActivity {
 //            this.cio.Upload = 0.0;
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+    public void updateLatency(Double latency){
+        if(latency> 0){
+            fixTextViewHeight(allTextViews.latency_label,this.fortydpi);
+            fixTextViewHeight(allTextViews.latency,this.fortydpi,latency+" ms");
         }
     }
     public void updateDownloadSpeed(Double speed){
@@ -262,6 +272,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateCsv(CellInfoObj cellio){
         writeCsvRow(cellio);
     }
+    /*
     public class SpeedTestResults {
         public Double DownloadSpeed;
         public Double UploadSpeed;
@@ -275,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
             this.PublicIPAddress = ipaddress;
         }
     }
+    */
     public class SpeedTestTask extends AsyncTask<Void, Void, CellInfoObj> {
         public SpeedTestTask(CellInfoObj cellInfoObj){
             this.cellio = cellInfoObj;
@@ -309,7 +321,9 @@ public class MainActivity extends AppCompatActivity {
 //                UploadTest();
 //                getPubIP();
                 //CellInfoObj cio = Params[0];
-
+                // BEGIN LATENCY TEST
+                cellio = LatencyTest(cellio);
+                // END LATENCY TEST
                 // BEGIN DOWNLOAD TEST
                 cellio = DownloadTest(cellio);
                 //updateDownloadSpeed(download_mbps);
@@ -335,6 +349,35 @@ public class MainActivity extends AppCompatActivity {
 
             updateCsv(results);
             updateTextViews(results);
+        }
+        private CellInfoObj LatencyTest(CellInfoObj cellios) throws IOException {
+            Log.i("nr5gperf", "begin latency test");
+            Double[] latency_tests = new Double[5];
+            for (int i = 0; i < 5; i++) {
+                double startTime = 0;
+                double endTime = 0;
+                boolean reachable = false;
+                while(!reachable){
+                    InetAddress inetAddress = InetAddress.getByName("8.8.8.8");
+                    startTime = Double.valueOf(System.currentTimeMillis());
+                    reachable = inetAddress.isReachable(3000);
+                    endTime = Double.valueOf(System.currentTimeMillis());
+                    //long waitUntil = System.currentTimeMillis() + 500;
+                    //while((System.currentTimeMillis()) < waitUntil){}
+                }
+                double latency = endTime - startTime;
+                updateLatency(latency);
+                latency_tests[i] = latency;
+                Log.i("nr5gperf","latency " + i + ": " + latency);
+            }
+            double sum = 0D;
+            for(double ping : latency_tests){
+                sum += ping;
+            }
+            double result = sum / 5D;
+            cellios.Latency = result;
+            Log.i("nr5gperf","latency: " + result);
+            return cellios;
         }
         private CellInfoObj DownloadTest(CellInfoObj cellios) throws IOException {
             Log.i("nr5gperf","begin download test");
@@ -366,11 +409,11 @@ public class MainActivity extends AppCompatActivity {
 //                download_mbps = 100 / totalSeconds;
                 inputStream.close();
             }
-            Double sum = 0.0;
-            for(Double speed : download_speeds){
+            double sum = 0.0;
+            for(double speed : download_speeds){
                 sum += speed;
             }
-            Double result = sum / 5;
+            double result = sum / 5D;
             Log.i("nr5gperf","download: " + result);
             cellios.Speed = result;
             return cellios;
@@ -417,15 +460,14 @@ public class MainActivity extends AppCompatActivity {
                 upload_speeds[i] = upload_mbps;
                 connection.disconnect();
             }
-            Double sum = 0.0;
-            for(Double speed : upload_speeds){
+            double sum = 0.0;
+            for(double speed : upload_speeds){
                 sum += speed;
             }
-            Double result = sum / 5;
+            double result = sum / 5D;
             Log.i("nr5gperf","upload: " + result);
             cellios.Upload = result;
             return cellios;
-
         }
         public CellInfoObj getPubIP(CellInfoObj cellios) throws IOException {
             InputStream iPinputStream = ((HttpURLConnection) new URL("https://fast.nanick.org/ip.php").openConnection()).getInputStream();
@@ -525,6 +567,10 @@ public class MainActivity extends AppCompatActivity {
         if(cellio.Upload > 0){
             fixTextViewHeight(allTextViews.uploadspeed_label,this.fortydpi);
             fixTextViewHeight(allTextViews.uploadspeed,this.fortydpi,new DecimalFormat("0.00").format(cellio.Upload)+" Mbps");
+        }
+        if(cellio.Latency > 0){
+            fixTextViewHeight(allTextViews.latency_label,this.fortydpi);
+            fixTextViewHeight(allTextViews.latency,this.fortydpi,cellio.Latency+" ms");
         }
         if(cellio.TimingAdvance != Integer.MAX_VALUE){
             fixTextViewHeight(allTextViews.ta_label,this.fortydpi);
@@ -719,7 +765,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             if (this.csv.createNewFile()) {
                 this.csv_writer = new FileWriter(this.csv);
-                this.csv_writer.write("Rsrp,SsRsrp,Speed,Upload,TimingAdvance,Plmn,Tac,CellId,eNodeB,Rat,Lat,Lng,EARFCN,Band,Spectrum,NRSpectrum,Bandwidth,Pci,Rsrq,IPAddress,NRPci,NRTac,NRARFCN,NR5GBandName,TimeStamp\n");
+                this.csv_writer.write("Rsrp,SsRsrp,Speed,Upload,Latency,TimingAdvance,Plmn,Tac,CellId,eNodeB,Rat,Lat,Lng,EARFCN,Band,Spectrum,NRSpectrum,Bandwidth,Pci,Rsrq,IPAddress,NRPci,NRTac,NRARFCN,NR5GBandName,TimeStamp\n");
                 this.csv_writer.close();
                 Log.i("nr5gperf", "Csv file created.");
             } else {
@@ -751,6 +797,7 @@ public class MainActivity extends AppCompatActivity {
         public int SsRsrp;
         public double Speed;
         public double Upload;
+        public double Latency;
         public int TimingAdvance;
         public String Plmn;
         public int Tac;
@@ -830,23 +877,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         @Override
-        public void onDisplayInfoChanged(TelephonyDisplayInfo displayInfo) {
-            if (displayInfo != null) {
-                String networkType;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-                    MainActivity.phoneState = GetNetworkOverride(displayInfo.getOverrideNetworkType());
-                    if(MainActivity.phoneState != "None" && MainActivity.phoneState != "Unknown" && MainActivity.phoneState != null){
-                        updateDisplayInfo(MainActivity.phoneState);
-                    }
-                }
+        public void onDisplayInfoChanged(@NonNull TelephonyDisplayInfo displayInfo) {
+            //String networkType;
+            MainActivity.phoneState = GetNetworkOverride(displayInfo.getOverrideNetworkType());
+            if(!Objects.equals(MainActivity.phoneState, "None") && !Objects.equals(MainActivity.phoneState, "Unknown") && MainActivity.phoneState != null){
+                updateDisplayInfo(MainActivity.phoneState);
             }
         }
     }
     private void updateDisplayInfo(String state){
         if(state != null){
             this.cio.Rat = state;
-            fixTextViewHeight(((TextView)findViewById(R.id.rat)),this.fortydpi);
-            fixTextViewHeight(((TextView)findViewById(R.id.rat_label)),this.fortydpi);
+            fixTextViewHeight((findViewById(R.id.rat)),this.fortydpi);
+            fixTextViewHeight((findViewById(R.id.rat_label)),this.fortydpi);
             ((TextView)findViewById(R.id.rat)).setText(this.cio.Rat);
         }
     }
@@ -856,19 +899,18 @@ public class MainActivity extends AppCompatActivity {
         if(cellInfo instanceof CellInfoLte){
             CellIdentityLte cellId = (CellIdentityLte)cellInfo.getCellIdentity();
             CellSignalStrengthLte signalStrengthLte = ((CellInfoLte) cellInfo).getCellSignalStrength();
-            StringJoiner sj = new StringJoiner(", ");
-            IntStream.of(cellId.getBands()).forEach(x -> sj.add(String.valueOf(x)));
+            //StringJoiner sj = new StringJoiner(", ");
+            //IntStream.of(cellId.getBands()).forEach(x -> sj.add(String.valueOf(x)));
             cio.CellId = cellId.getCi();
             cio.Tac = cellId.getTac();
             cio.EARFCN = cellId.getEarfcn();
-            Boolean found = false;
-            for(int a = 0; a < this.bands.length; a++){
-                LteBands b = this.bands[a];
+            boolean found = false;
+            for (LteBands b : this.bands) {
                 ArrayList<Double> earfcnlist = b.dLEARFCN;
                 Collections.sort(earfcnlist);
                 double n_low = earfcnlist.get(0);
                 double n_high = earfcnlist.get((earfcnlist.toArray().length - 1));
-                if(cio.EARFCN >= n_low & cio.EARFCN <= n_high){
+                if (cio.EARFCN >= n_low & cio.EARFCN <= n_high) {
                     cio.Band = b.band;
                     cio.Spectrum = b.name;
                     found = true;
@@ -1058,55 +1100,57 @@ public class MainActivity extends AppCompatActivity {
     public class AllTextViews {
         public AllTextViews(){
         }
-        public TextView rows = ((TextView)findViewById(R.id.rows));
-        public TextView rsrp = ((TextView)findViewById(R.id.rsrp));
-        public TextView ssrsrp = ((TextView)findViewById(R.id.ssrsrp));
-        public TextView downloadspeed = ((TextView)findViewById(R.id.downloadspeed));
-        public TextView uploadspeed = ((TextView)findViewById(R.id.uploadspeed));
-        public TextView plmn = ((TextView)findViewById(R.id.plmn));
-        public TextView lac = ((TextView)findViewById(R.id.lac));
-        public TextView cellid = ((TextView)findViewById(R.id.cellid));
-        public TextView enodeb = ((TextView)findViewById(R.id.enodeb));
-        public TextView rat = ((TextView)findViewById(R.id.rat));
-        public TextView latitude = ((TextView)findViewById(R.id.latitude));
-        public TextView longitude = ((TextView)findViewById(R.id.longitude));
-        public TextView channel = ((TextView)findViewById(R.id.channel));
-        public TextView lte_band = ((TextView)findViewById(R.id.lte_band));
-        public TextView spectrum = ((TextView)findViewById(R.id.spectrum));
-        public TextView pci = ((TextView)findViewById(R.id.pci));
-        public TextView rsrq = ((TextView)findViewById(R.id.rsrq));
-        public TextView ipaddress = ((TextView)findViewById(R.id.ipaddress));
-        public TextView bandwidth = ((TextView)findViewById(R.id.bandwidth));
-        public TextView ta = ((TextView)findViewById(R.id.ta));
-        public TextView nrarfcn = ((TextView)findViewById(R.id.nrarfcn));
-        public TextView nr5gband = ((TextView)findViewById(R.id.nr5gband));
-        public TextView nrspectrum = ((TextView)findViewById(R.id.nrspectrum));
-        public TextView nrpci = ((TextView)findViewById(R.id.nrpci));
-        public TextView nrtac = ((TextView)findViewById(R.id.nrtac));
-        public TextView rows_label = ((TextView)findViewById(R.id.rows_label));
-        public TextView rsrp_label = ((TextView)findViewById(R.id.rsrp_label));
-        public TextView ssrsrp_label = ((TextView)findViewById(R.id.ssrsrp_label));
-        public TextView downloadspeed_label = ((TextView)findViewById(R.id.downloadspeed_label));
-        public TextView uploadspeed_label = ((TextView)findViewById(R.id.uploadspeed_label));
-        public TextView plmn_label = ((TextView)findViewById(R.id.plmn_label));
-        public TextView lac_label = ((TextView)findViewById(R.id.lac_label));
-        public TextView cellid_label = ((TextView)findViewById(R.id.cellid_label));
-        public TextView enodeb_label = ((TextView)findViewById(R.id.enodeb_label));
-        public TextView rat_label = ((TextView)findViewById(R.id.rat_label));
-        public TextView latitude_label = ((TextView)findViewById(R.id.latitude_label));
-        public TextView longitude_label = ((TextView)findViewById(R.id.longitude_label));
-        public TextView channel_label = ((TextView)findViewById(R.id.channel_label));
-        public TextView lte_band_label = ((TextView)findViewById(R.id.lte_band_label));
-        public TextView spectrum_label = ((TextView)findViewById(R.id.spectrum_label));
-        public TextView pci_label = ((TextView)findViewById(R.id.pci_label));
-        public TextView rsrq_label = ((TextView)findViewById(R.id.rsrq_label));
-        public TextView ipaddress_label = ((TextView)findViewById(R.id.ipaddress_label));
-        public TextView bandwidth_label = ((TextView)findViewById(R.id.bandwidth_label));
-        public TextView ta_label = ((TextView)findViewById(R.id.ta_label));
-        public TextView nrarfcn_label = ((TextView)findViewById(R.id.nrarfcn_label));
-        public TextView nr5gband_label = ((TextView)findViewById(R.id.nr5gband_label));
-        public TextView nrspectrum_label = ((TextView)findViewById(R.id.nrspectrum_label));
-        public TextView nrpci_label = ((TextView)findViewById(R.id.nrpci_label));
-        public TextView nrtac_label = ((TextView)findViewById(R.id.nrtac_label));
+        public TextView rows = (findViewById(R.id.rows));
+        public TextView rsrp = (findViewById(R.id.rsrp));
+        public TextView ssrsrp = (findViewById(R.id.ssrsrp));
+        public TextView downloadspeed = (findViewById(R.id.downloadspeed));
+        public TextView uploadspeed = (findViewById(R.id.uploadspeed));
+        public TextView latency = (findViewById(R.id.latency));
+        public TextView plmn = (findViewById(R.id.plmn));
+        public TextView lac = (findViewById(R.id.lac));
+        public TextView cellid = (findViewById(R.id.cellid));
+        public TextView enodeb = (findViewById(R.id.enodeb));
+        public TextView rat = (findViewById(R.id.rat));
+        public TextView latitude = (findViewById(R.id.latitude));
+        public TextView longitude = (findViewById(R.id.longitude));
+        public TextView channel = (findViewById(R.id.channel));
+        public TextView lte_band = (findViewById(R.id.lte_band));
+        public TextView spectrum = (findViewById(R.id.spectrum));
+        public TextView pci = (findViewById(R.id.pci));
+        public TextView rsrq = (findViewById(R.id.rsrq));
+        public TextView ipaddress = (findViewById(R.id.ipaddress));
+        public TextView bandwidth = (findViewById(R.id.bandwidth));
+        public TextView ta = (findViewById(R.id.ta));
+        public TextView nrarfcn = (findViewById(R.id.nrarfcn));
+        public TextView nr5gband = (findViewById(R.id.nr5gband));
+        public TextView nrspectrum = (findViewById(R.id.nrspectrum));
+        public TextView nrpci = (findViewById(R.id.nrpci));
+        public TextView nrtac = (findViewById(R.id.nrtac));
+        public TextView rows_label = (findViewById(R.id.rows_label));
+        public TextView rsrp_label = (findViewById(R.id.rsrp_label));
+        public TextView ssrsrp_label = (findViewById(R.id.ssrsrp_label));
+        public TextView downloadspeed_label = (findViewById(R.id.downloadspeed_label));
+        public TextView uploadspeed_label = (findViewById(R.id.uploadspeed_label));
+        public TextView latency_label = (findViewById(R.id.latency_label));
+        public TextView plmn_label = (findViewById(R.id.plmn_label));
+        public TextView lac_label = (findViewById(R.id.lac_label));
+        public TextView cellid_label = (findViewById(R.id.cellid_label));
+        public TextView enodeb_label = (findViewById(R.id.enodeb_label));
+        public TextView rat_label = (findViewById(R.id.rat_label));
+        public TextView latitude_label = (findViewById(R.id.latitude_label));
+        public TextView longitude_label = (findViewById(R.id.longitude_label));
+        public TextView channel_label = (findViewById(R.id.channel_label));
+        public TextView lte_band_label = (findViewById(R.id.lte_band_label));
+        public TextView spectrum_label = (findViewById(R.id.spectrum_label));
+        public TextView pci_label = (findViewById(R.id.pci_label));
+        public TextView rsrq_label = (findViewById(R.id.rsrq_label));
+        public TextView ipaddress_label = (findViewById(R.id.ipaddress_label));
+        public TextView bandwidth_label = (findViewById(R.id.bandwidth_label));
+        public TextView ta_label = (findViewById(R.id.ta_label));
+        public TextView nrarfcn_label = (findViewById(R.id.nrarfcn_label));
+        public TextView nr5gband_label = (findViewById(R.id.nr5gband_label));
+        public TextView nrspectrum_label = (findViewById(R.id.nrspectrum_label));
+        public TextView nrpci_label = (findViewById(R.id.nrpci_label));
+        public TextView nrtac_label = (findViewById(R.id.nrtac_label));
     }
 }
